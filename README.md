@@ -10,12 +10,12 @@ Probleme
 2. kann daten von der Datenbank nicht abgreifen
 
 1)Aufgaben
-Sehenswürdigkeiten
-	Formulardaten als Punkt darstellen
-	einlesen einer geojson datei
+Sehenswürdigkeiten:
+	Formulardaten als Punkt darstellen,
+	einlesen einer geojson datei,
 
-2)Stadtouren
-	alles
+2)Stadtouren:
+	alles,
 
-3)Bushaltestellen
-	alles
+3)Bushaltestellen:
+	alles,
