@@ -5,9 +5,13 @@ const mongoose = require("mongoose");
 //router setup
 const router = express.Router();
 const SightModel=mongoose.model("Sight")
-
+//aufruf add seite
 router.get("/add", (req,res)=>{
     res.render("add-sight")
+})
+//aufruf impressum seite 
+router.get("/impressum", (req,res)=>{
+    res.render("impressum")
 })
 router.post("/add", (req,res)=>{
 //name url description

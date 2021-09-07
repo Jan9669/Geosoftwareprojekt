@@ -3,7 +3,6 @@ const mongoose = require ("mongoose");
     var SightSchema = new mongoose.Schema({
         sightname:{
             type : String,
-            required : "Required"
         },
         sighturl:{
             type: String

@@ -10,7 +10,7 @@ const SightController = require("./controllers/sights")
 application.use(bodyparser.urlencoded({
     extended:true
 }))
-//views folder
+//views folder handlebar routing?
 application.set('views', path.join(__dirname, "/views/"));
 
 application.engine("hbs", expressHandlerbars({
