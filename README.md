@@ -6,16 +6,16 @@ Start Server -> npm start
 ----------------------------------------------
 Probleme
 
-bisher nur inline script möglich
-kann daten von der Datenbank nicht abgreifen
+1. bisher nur inline script möglich
+2. kann daten von der Datenbank nicht abgreifen
 
-Aufgaben
+1)Aufgaben
 Sehenswürdigkeiten
 	Formulardaten als Punkt darstellen
 	einlesen einer geojson datei
 
-Stadtouren
+2)Stadtouren
 	alles
 
-Bushaltestellen
+3)Bushaltestellen
 	alles
