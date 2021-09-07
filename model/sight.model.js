@@ -11,6 +11,14 @@ const mongoose = require ("mongoose");
             type: String
 
         },
+        sightlongitude:{
+            type: Number
+
+        },
+        sightlatitude:{
+            type: Number
+
+        },
         
 });
 mongoose.model("Sight",SightSchema)

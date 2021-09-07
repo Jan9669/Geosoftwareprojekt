@@ -19,6 +19,8 @@ var sight = new SightModel();
 sight.sightname=req.body.sightname;
 sight.sighturl=req.body.sighturl;
 sight.sightdescription=req.body.sightdescription;
+sight.sightlongitude=req.body.sightlongitude;
+sight.sightlatitude=req.body.sightlatitude;
 
 
 sight.save((err,doc)=>{
@@ -59,3 +61,4 @@ router.get("/list", (req,res)=>{
 //export router
 
 module.exports=router;
+

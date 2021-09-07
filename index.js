@@ -10,7 +10,7 @@ const SightController = require("./controllers/sights")
 application.use(bodyparser.urlencoded({
     extended:true
 }))
-//views folder handlebar routing?
+//views folder handlebar routing
 application.set('views', path.join(__dirname, "/views/"));
 
 application.engine("hbs", expressHandlerbars({
@@ -19,7 +19,7 @@ application.engine("hbs", expressHandlerbars({
     layoutDir: __dirname+ "/views/layouts"
 }))
 application.set("view engine", "hbs")
-
+//set handlebar routes
 application.get("/", (req, res)=>{
    
    res.render("index", {})
