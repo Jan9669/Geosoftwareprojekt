@@ -26,7 +26,7 @@ application.get("/", (req, res)=>{
 })
 
 application.use("/sight", SightController)
-
+//use files from public folder 
 application.use(express.static('public'))
 application.use(express.static('files'))
 
@@ -35,25 +35,6 @@ application.listen("3000",()=>{
     console.log("Server started");
 });
 
-//test
-/*
-application.route({
-    method: 'GET',
-    path: '/{map.js}',
-    handler: {
-      directory: {
-        path:    __dirname + '/public/js',
-        listing: false,
-        index:   false
-      }
-    }
-  });
-  application.route({
-    method: 'GET',
-    path: '/',
-    handler: function(request, reply) {
-      reply.view('index');
-    }
-  });*/
+
   
   
