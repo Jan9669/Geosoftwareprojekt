@@ -6,8 +6,8 @@ Start Server -> npm start
 ----------------------------------------------
 Probleme
 
-1. bisher nur inline script möglich
-2. kann daten von der Datenbank nicht abgreifen
+
+1. kann daten von der Datenbank nicht abgreifen
 
 1)Aufgaben
 Sehenswürdigkeiten:
