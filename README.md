@@ -11,8 +11,7 @@ Probleme
 
 1)Aufgaben
 Sehenswürdigkeiten:
-	Formulardaten als Punkt darstellen,
-	einlesen einer geojson datei,
+	
 
 2)Stadtouren:
 	alles,
