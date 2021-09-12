@@ -1,5 +1,5 @@
 // Create the map
-var map = L.map('map',{drawControl: false}).setView([51.9692307002609,7.595822811126709], 6);
+var map = L.map('map',{drawControl: false}).setView([51.9692307002609,7.595822811126709], 14);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
@@ -17,23 +17,12 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           circle: false,
           marker: true,
           polyline: false, 
-          polygon: false,
+          polygon: true,
           rectangle: false
         }
       }).addTo(map);
-//add marker with coordinates
-/*map.on('draw:created', function (e) {
-    var type = e.layerType,
-        layer = e.layer;
 
-    map.addLayer(layer);
-
-    if (type === 'marker') {    
-        layer.bindPopup(':' + layer.getLatLng()).openPopup();
-    }
-
-});*/
-//Custom functions upon 'edit'
+//marker with form
 map.on('draw:created', function(e) {
     var coords = e.layer._latlng;
     console.log(coords);
@@ -75,3 +64,97 @@ map.on('draw:created', function(e) {
 
   });
 });
+
+
+//Bushaltestelle
+var hskoordinatenarray=[]
+var anzahlhs
+var marker
+var array4marker=[]
+
+//Bushaltestellen json datei verarbeitung
+$.getJSON("Haltestellenjson.json", function(json) {
+  anzahlhs=json.features.length
+  
+for(let a=0; a<anzahlhs;a++){
+    hskoordinatenarray[a]=json.features[a].geometry.coordinates
+    
+
+    /*
+    koordinaten wetter name
+    
+    */
+   array4marker[a]=[]
+   //array einträge aus objekt filtern
+   var longitude=hskoordinatenarray[a][0]
+   var latitude=hskoordinatenarray[a][1]
+   var name=json.features[a].properties.lbez
+
+   //var hstemperatur=showtemperatur(latitude,longitude)
+   //Attribute ins neue array schreiben
+   
+   for (let b=0;b<2;b++){
+    array4marker[a][0]=longitude;
+    array4marker[a][1]=latitude;
+    array4marker[a][2]=name;
+    //array4marker[a][3]=hstemperatur
+    //array4marker[a][3]=Wetter
+   }
+ 
+   
+ } 
+ //end loop
+//console.log(array4marker)
+ //add marker to map
+ for(let i=0; i<anzahlhs;i++){
+  marker=L.marker([array4marker[i][1],array4marker[i][0]]).addTo(map).bindTooltip(
+    /*text*/"name: "+array4marker[i][2]+'<br>'+"Temperatur:"+/*array4marker[i][3]+*/'<br>'+"Wetter:"+"",
+  {
+      permanent: false, 
+      direction: 'right'
+      
+  });
+ }
+//loop end
+ 
+});
+//getjson function end
+
+
+//wetter api funktion
+  //key bitte hier nicht stehen lassen :)
+  var key=''
+
+
+function showtemperatur(lat, lng) {
+
+    $(document).ready(function(){
+        
+        $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid="+key,function(data){
+           
+     //interesting Json object attributes
+     
+     //var sky=data.weather[0].description
+     var temperatur=(data.main.temp)-273
+     
+            });
+            
+        });
+        
+    }
+
+  
+//test
+
+//  console.log(showtemperatur(50,8))
+
+
+
+
+
+
+
+
+
+
+
