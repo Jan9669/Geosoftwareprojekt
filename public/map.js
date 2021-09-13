@@ -69,7 +69,7 @@ map.on('draw:created', function(e) {
 //Bushaltestelle
 var hskoordinatenarray=[]
 var anzahlhs
-var marker
+var busmarker
 var array4marker=[]
 
 //Bushaltestellen json datei verarbeitung
@@ -89,7 +89,10 @@ for(let a=0; a<anzahlhs;a++){
    var longitude=hskoordinatenarray[a][0]
    var latitude=hskoordinatenarray[a][1]
    var name=json.features[a].properties.lbez
-
+   //test showwetter
+   //var temperatur4array=showtemperatur(latitude,longitude)
+  console.log(showtemperatur(latitude,longitude))
+  
    //var hstemperatur=showtemperatur(latitude,longitude)
    //Attribute ins neue array schreiben
    
@@ -97,25 +100,38 @@ for(let a=0; a<anzahlhs;a++){
     array4marker[a][0]=longitude;
     array4marker[a][1]=latitude;
     array4marker[a][2]=name;
-    //array4marker[a][3]=hstemperatur
-    //array4marker[a][3]=Wetter
+
+    //test showwetter
+    //array4marker[a][3]=temperatur4array;
+    
    }
  
    
  } 
  //end loop
 //console.log(array4marker)
- //add marker to map
+
+ //add marker+info to map + on off switch
+ var busmarkerarray=[]
  for(let i=0; i<anzahlhs;i++){
-  marker=L.marker([array4marker[i][1],array4marker[i][0]]).addTo(map).bindTooltip(
+  var busmarker=L.marker([array4marker[i][1],array4marker[i][0]]).addTo(map).bindTooltip(
     /*text*/"name: "+array4marker[i][2]+'<br>'+"Temperatur:"+/*array4marker[i][3]+*/'<br>'+"Wetter:"+"",
   {
       permanent: false, 
       direction: 'right'
       
   });
+ busmarkerarray[i]=busmarker
  }
 //loop end
+//on off bushaltestellen button
+var busmarkergroup = L.layerGroup(busmarkerarray);
+var overlayMaps = {
+  "Bushaltestellen anzeigen": busmarkergroup
+};
+L.control.layers(null,overlayMaps).addTo(map);
+
+
  
 });
 //getjson function end
@@ -123,20 +139,22 @@ for(let a=0; a<anzahlhs;a++){
 
 //wetter api funktion
   //key bitte hier nicht stehen lassen :)
-  var key=''
-
+var key=''
+var temperatur
 
 function showtemperatur(lat, lng) {
 
     $(document).ready(function(){
         
         $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid="+key,function(data){
-           
      //interesting Json object attributes
      
      //var sky=data.weather[0].description
-     var temperatur=(data.main.temp)-273
-     
+     temperatur=(data.main.temp)-273
+
+      
+     //console.log(temperatur)
+     //return temperatur
             });
             
         });
@@ -146,7 +164,7 @@ function showtemperatur(lat, lng) {
   
 //test
 
-//  console.log(showtemperatur(50,8))
+//console.log(showtemperatur(50,8))
 
 
 
