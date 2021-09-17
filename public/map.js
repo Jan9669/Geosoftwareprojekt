@@ -24,11 +24,11 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 //marker with form
 map.on('draw:created', function(e) {
-    var coords = e.layer._latlng;
-    console.log(coords);
+   var coords = e.layer._latlng;
+  //  console.log(coords);
     var tempMarker = featureGroup.addLayer(e.layer);
     var popupContent = 
-    '<form role="form" id="form" enctype="multipart/form-data" class = "form-horizontal" onsubmit="addMarker()">'+'<strong>Koordinaten</strong>'+'<br>'+coords+
+    '<form role="form" id="form" enctype="multipart/form-data" class = "form-horizontal" onsubmit="addMarker()">'+
     
 //textfield1
 '<div class="form-group">'+
@@ -64,7 +64,7 @@ map.on('draw:created', function(e) {
 
   });
 });
-
+//marker end
 
 //Bushaltestelle
 var hskoordinatenarray=[]
@@ -89,33 +89,24 @@ for(let a=0; a<anzahlhs;a++){
    var longitude=hskoordinatenarray[a][0]
    var latitude=hskoordinatenarray[a][1]
    var name=json.features[a].properties.lbez
-   //test showwetter
-   //var temperatur4array=showtemperatur(latitude,longitude)
-  console.log(showtemperatur(latitude,longitude))
   
-   //var hstemperatur=showtemperatur(latitude,longitude)
    //Attribute ins neue array schreiben
    
    for (let b=0;b<2;b++){
     array4marker[a][0]=longitude;
     array4marker[a][1]=latitude;
     array4marker[a][2]=name;
-
-    //test showwetter
-    //array4marker[a][3]=temperatur4array;
     
    }
  
    
  } 
- //end loop
-//console.log(array4marker)
 
  //add marker+info to map + on off switch
  var busmarkerarray=[]
  for(let i=0; i<anzahlhs;i++){
   var busmarker=L.marker([array4marker[i][1],array4marker[i][0]]).addTo(map).bindTooltip(
-    /*text*/"name: "+array4marker[i][2]+'<br>'+"Temperatur:"+/*array4marker[i][3]+*/'<br>'+"Wetter:"+"",
+    /*text*/"name: "+array4marker[i][2],
   {
       permanent: false, 
       direction: 'right'
@@ -132,47 +123,111 @@ var overlayMaps = {
 L.control.layers(null,overlayMaps).addTo(map);
 
 
- 
+//dummy nearest busstopp
+var mylocationlat=51.963668
+var mylocationlon= 7.62355
+var mylocation =L.marker([mylocationlat,mylocationlon]).addTo(map).bindTooltip(
+  "Mein Standort",
+{
+    permanent: true, 
+    direction: 'right'
+    
 });
-//getjson function end
 
 
-//wetter api funktion
-  //key bitte hier nicht stehen lassen :)
-var key=''
-var temperatur
 
-function showtemperatur(lat, lng) {
 
-    $(document).ready(function(){
-        
-        $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid="+key,function(data){
-     //interesting Json object attributes
-     
-     //var sky=data.weather[0].description
-     temperatur=(data.main.temp)-273
 
-      
-     //console.log(temperatur)
-     //return temperatur
-            });
-            
-        });
-        
-    }
-
+//calculate distance of tow coordinates
+/**
+ * 
+ * @param {number} lat1 first latitude
+ * @param {number} lon1 first longitude
+ * @param {number} lat2 second latitut
+ * @param {number} lon2 second longitude
+ * @returns 
+ */
+ function distance(lat1, lon1, lat2, lon2) {
+  var p = 0.017453292519943295;    // Math.PI / 180
+  var c = Math.cos;
+  var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+          c(lat1 * p) * c(lat2 * p) * 
+          (1 - c((lon2 - lon1) * p))/2;
   
-//test
-
-//console.log(showtemperatur(50,8))
-
-
+  return (12742 * Math.asin(Math.sqrt(a)))*1000; // 2 * R; R = 6371 km
+}
+//function nearest busstopp
 
 
 
+function getnearestbusstopp(mylocationlatitude,mylocationlongitude, allbusstopps){
+  var distanceofcoordinates
+  var distancearray=[]
+  for (var n=0;n<anzahlhs;n++){
+   //calculate distance for every busstopp
+  distanceofcoordinates=distance(mylocationlongitude,mylocationlatitude,allbusstopps[n][0],allbusstopps[n][1])
+  distancearray[n]=[]
+   for (var da=0;da<4;da++){
+   
+    distancearray[n][0]=distanceofcoordinates;
+    distancearray[n][1]=allbusstopps[n][2];
+    distancearray[n][2]=allbusstopps[n][0];
+    distancearray[n][3]=allbusstopps[n][1];
+   }
+      //console.log(distanceofcoordinates)
+  }
+  //sorted array
+   var sortedarray=distancearray.sort(sortFunction);
+//nearestbusstopp
+  var nearestbusstopp=sortedarray[0]
+  return nearestbusstopp
+}
 
+var nbusstopp=getnearestbusstopp(mylocationlat,mylocationlon,array4marker)
 
+//nearestbusstoppname
+ nbsname=nbusstopp[1]
+//nearestbusstopplatitude
+nbslongitude=nbusstopp[2]
+//nearestbusstopplongitude
+nbslatitude=nbusstopp[3]
 
+shownearestbusstopMarker(nbslatitude,nbslongitude,nbsname)
 
+//show nearest bustopp with marker+textpopup
+function shownearestbusstopMarker(lat, lng,name) {
+  
+  $(document).ready(function(){
+      
+      $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid=",function(data){
+         
+   //interesting Json object attributes
+   var location = name
+   var sky=data.weather[0].description
+   var temperatur=(data.main.temp)-273
+   var windspeed=data.wind.speed
+    //Ouput Marker
+  
+      L.marker([lat,lng]).addTo(map).bindTooltip("Ort: "+location+'<br>'+"Himmel: "+sky+'<br>'+"Temperatur: "+temperatur+'<br>'+"Windgeschwindigkeit: "+windspeed+" ", 
+      {
+          permanent: false, 
+          direction: 'right'
+          
+      }
+  );
+          });
+          
+      });
+      
+  }
 
-
+//sort function
+function sortFunction(a, b) {
+  if (a[0] === b[0]) {
+      return 0;
+  }
+  else {
+      return (a[0] < b[0]) ? -1 : 1;
+  }
+}
+});
